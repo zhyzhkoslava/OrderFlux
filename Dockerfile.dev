@@ -1,0 +1,53 @@
+# Dockerfile.dev
+# syntax=docker/dockerfile:1.6
+FROM dunglas/frankenphp:php8.4-alpine
+
+# -----------------------------
+# System dependencies
+# -----------------------------
+RUN apk add --no-cache \
+    bash \
+    git \
+    unzip \
+    icu-dev \
+    libpq-dev \
+    linux-headers \
+    rabbitmq-c-dev
+
+# -----------------------------
+# PHP extensions
+# -----------------------------
+RUN install-php-extensions \
+    pdo_pgsql \
+    intl \
+    pcntl \
+    opcache \
+    redis \
+    sockets
+
+# -----------------------------
+# Composer
+# -----------------------------
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# -----------------------------
+# App directory
+# -----------------------------
+WORKDIR /app
+COPY . .
+
+# -----------------------------
+# Composer install (DEV)
+# -----------------------------
+RUN composer install --no-interaction --prefer-dist --no-scripts
+
+# -----------------------------
+# Entrypoint
+# -----------------------------
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 8000
+
+CMD ["/entrypoint.sh"]
+
