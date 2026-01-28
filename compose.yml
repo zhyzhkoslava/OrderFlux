@@ -6,16 +6,25 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: laravel_app
+
     volumes:
       - .:/app
+
     ports:
       - "8000:8000"
+      - "9003:9003"
+
     depends_on:
       - postgres
       - redis
       - rabbitmq
+
     environment:
+      # App
       APP_ENV: local
+      APP_DEBUG: "true"
+
+      # Database
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
@@ -23,11 +32,22 @@ services:
       DB_USERNAME: laravel
       DB_PASSWORD: secret
 
+      # Xdebug
+      XDEBUG_MODE: debug,coverage
+      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
+      PHP_IDE_CONFIG: serverName=orderflux
+
+      # Redis
       REDIS_HOST: redis
       REDIS_PORT: 6379
 
+      # RabbitMQ
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
     networks:
       - backend
 
