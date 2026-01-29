@@ -21,13 +21,11 @@ RUN install-php-extensions \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN printf "%s\n" \
-  "xdebug.mode=debug,coverage" \
+  "xdebug.mode=${XDEBUG_MODE}" \
   "xdebug.start_with_request=yes" \
-  "xdebug.client_host=host.docker.internal" \
-  "xdebug.client_port=60552" \
-  "xdebug.idekey=PHPSTORM" \
-  "xdebug.log=/tmp/xdebug.log" \
-  "xdebug.log_level=7" \
+  "xdebug.client_host=${XDEBUG_CLIENT_HOST}" \
+  "xdebug.client_port=${XDEBUG_CLIENT_PORT}" \
+  "xdebug.idekey=${XDEBUG_IDEKEY}" \
   > /usr/local/etc/php/conf.d/99-xdebug.ini
 
 WORKDIR /opt/project

@@ -7,6 +7,9 @@ services:
       dockerfile: Dockerfile.dev
     container_name: laravel_app
 
+    env_file:
+      - .env
+
     volumes:
       - .:/opt/project
     working_dir: /opt/project
@@ -19,75 +22,51 @@ services:
       - redis
       - rabbitmq
 
-    environment:
-      # App
-      APP_ENV: local
-      APP_DEBUG: "true"
-
-      # Database
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: laravel
-      DB_USERNAME: laravel
-      DB_PASSWORD: secret
-
-      # Xdebug
-      XDEBUG_MODE: debug,coverage
-      XDEBUG_CONFIG: client_host=host.docker.internal client_port=60552
-      PHP_IDE_CONFIG: serverName=orderflux
-
-      # Redis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-
-      # RabbitMQ
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: 5672
+    networks:
+      - app_postgres
+      - app_redis
+      - app_rabbitmq
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-    networks:
-      - backend
-
   postgres:
     image: postgres:16
     container_name: postgres
-    environment:
-      POSTGRES_DB: laravel
-      POSTGRES_USER: laravel
-      POSTGRES_PASSWORD: secret
+
+    env_file:
+      - .env
+
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+
     networks:
-      - backend
+      - app_postgres
 
   redis:
     image: redis:7-alpine
     container_name: redis
-    ports:
-      - "6379:6379"
+
     networks:
-      - backend
+      - app_redis
 
   rabbitmq:
     image: rabbitmq:3.13-management
     container_name: rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+
+    env_file:
+      - .env
+
     networks:
-      - backend
+      - app_rabbitmq
 
 volumes:
   pgdata:
 
 networks:
-  backend:
+  app_postgres:
+    driver: bridge
+  app_redis:
+    driver: bridge
+  app_rabbitmq:
     driver: bridge
