@@ -1,11 +1,5 @@
-# Dockerfile.dev
-# syntax=docker/dockerfile:1.6
-
 FROM dunglas/frankenphp:php8.4-alpine
 
-# -----------------------------
-# System dependencies
-# -----------------------------
 RUN apk add --no-cache \
     bash \
     git \
@@ -15,9 +9,6 @@ RUN apk add --no-cache \
     linux-headers \
     rabbitmq-c-dev
 
-# -----------------------------
-# PHP extensions (DEV)
-# -----------------------------
 RUN install-php-extensions \
     pdo_pgsql \
     intl \
@@ -27,25 +18,19 @@ RUN install-php-extensions \
     sockets \
     xdebug
 
-# -----------------------------
-# Composer
-# -----------------------------
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# -----------------------------
-# Xdebug configuration
-# -----------------------------
-RUN echo "zend_extension=xdebug" > /usr/local/etc/php/conf.d/xdebug.ini && \
-    echo "xdebug.mode=debug,coverage" >> /usr/local/etc/php/conf.d/xdebug.ini && \
-    echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini && \
-    echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini && \
-    echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/xdebug.ini && \
-    echo "xdebug.log_level=0" >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN printf "%s\n" \
+  "xdebug.mode=debug,coverage" \
+  "xdebug.start_with_request=yes" \
+  "xdebug.client_host=host.docker.internal" \
+  "xdebug.client_port=60552" \
+  "xdebug.idekey=PHPSTORM" \
+  "xdebug.log=/tmp/xdebug.log" \
+  "xdebug.log_level=7" \
+  > /usr/local/etc/php/conf.d/99-xdebug.ini
 
-# -----------------------------
-# App
-# -----------------------------
-WORKDIR /app
+WORKDIR /opt/project
 COPY . .
 
 RUN composer install --no-interaction --prefer-dist
