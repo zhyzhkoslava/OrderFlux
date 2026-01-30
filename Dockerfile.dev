@@ -1,10 +1,5 @@
-# Dockerfile.dev
-# syntax=docker/dockerfile:1.6
 FROM dunglas/frankenphp:php8.4-alpine
 
-# -----------------------------
-# System dependencies
-# -----------------------------
 RUN apk add --no-cache \
     bash \
     git \
@@ -14,40 +9,30 @@ RUN apk add --no-cache \
     linux-headers \
     rabbitmq-c-dev
 
-# -----------------------------
-# PHP extensions
-# -----------------------------
 RUN install-php-extensions \
     pdo_pgsql \
     intl \
     pcntl \
     opcache \
     redis \
-    sockets
+    sockets \
+    xdebug
 
-# -----------------------------
-# Composer
-# -----------------------------
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# -----------------------------
-# App directory
-# -----------------------------
-WORKDIR /app
+RUN printf "%s\n" \
+  "xdebug.mode=${XDEBUG_MODE}" \
+  "xdebug.start_with_request=yes" \
+  "xdebug.client_host=${XDEBUG_CLIENT_HOST}" \
+  "xdebug.client_port=${XDEBUG_CLIENT_PORT}" \
+  "xdebug.idekey=${XDEBUG_IDEKEY}" \
+  > /usr/local/etc/php/conf.d/99-xdebug.ini
+
+WORKDIR /opt/project
 COPY . .
 
-# -----------------------------
-# Composer install (DEV)
-# -----------------------------
-RUN composer install --no-interaction --prefer-dist --no-scripts
-
-# -----------------------------
-# Entrypoint
-# -----------------------------
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN composer install --no-interaction --prefer-dist
 
 EXPOSE 8000
 
-CMD ["/entrypoint.sh"]
-
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--watch"]
