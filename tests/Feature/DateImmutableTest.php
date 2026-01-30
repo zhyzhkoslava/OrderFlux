@@ -1,21 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class DateImmutableTest extends TestCase
 {
-    public function testDateNowReturnsCarbonImmutable(): void
+    #[Test]
+    public function dateNowReturnsCarbonImmutable(): void
     {
         $now = Date::now();
 
         self::assertInstanceOf(CarbonImmutable::class, $now);
     }
 
-    public function testImmutableDateDoesNotMutateOriginal(): void
+    #[Test]
+    public function immutableDateDoesNotMutateOriginal(): void
     {
         $date = Date::now();
         $newDate = $date->addDay();
