@@ -1,0 +1,16 @@
+includes:
+  - vendor/larastan/larastan/extension.neon
+  - vendor/tomasvotruba/cognitive-complexity/config/extension.neon
+
+parameters:
+  paths:
+    - app
+    - database
+  level: 6
+  cognitive_complexity:
+    class: 85
+    function: 8
+  checkOctaneCompatibility: true
+  tmpDir: ./var/cache/phpstan
+  excludePaths:
+      - database/migrations/*
