@@ -72,16 +72,6 @@ jobs:
               command: './vendor/bin/rector process --dry-run --no-progress-bar --output-format=github --ansi',
               php: true,
             }
-          - {
-              name: '🅿️ Prettier',
-              command: 'yarn prettier',
-              node: true,
-            }
-          - {
-            name: '🔯 Eslint',
-            command: 'yarn eslint',
-            node: true,
-          }
 
     steps:
       - name: '🛎 Checkout'

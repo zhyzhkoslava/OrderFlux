@@ -15,7 +15,7 @@ on:
 jobs:
   deploy:
     name: Deploy ${{ github.event.inputs.environment }} from ${{ github.event.inputs.branch }}
-    runs-on: mw-staging
+    runs-on: staging
     environment:
       name: ${{ github.event.inputs.environment }}
 
@@ -43,9 +43,9 @@ jobs:
           docker compose up -d --build
           sleep 10
 
-          docker compose exec mw-app yarn install --frozen-lockfile
-          docker compose exec mw-app yarn build
+          docker compose exec app yarn install --frozen-lockfile
+          docker compose exec app yarn build
 
-          docker compose exec mw-app php artisan optimize
+          docker compose exec app php artisan optimize
 
-          docker compose exec mw-app php artisan migrate --force
+          docker compose exec app php artisan migrate --force
