@@ -1,0 +1,172 @@
+name: '🪄 OrderFlux | 🔄 CI'
+
+on:
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - README.md
+  pull_request:
+    branches:
+      - develop
+      - feature/*
+      - fix/*
+      - hotfix/*
+      - epic/*
+      - release/*
+    paths-ignore:
+      - README.md
+
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    name: '🧹 Clean up GitHub repo'
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: '🗑 Delete workflow runs'
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 7
+          keep_minimum_runs: 1
+          delete_workflow_pattern: ci.yml
+
+  lints:
+    name: '🪄 Lints | ${{ matrix.command.name }}'
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine3.20
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: testing
+          POSTGRES_USER: db
+          POSTGRES_PASSWORD: db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - {
+              name: '🔍 PHPStan',
+              command: './vendor/bin/phpstan analyse --no-progress --error-format=github --memory-limit=2G',
+              php: true,
+            }
+          - {
+              name: '🧽 Laravel Pint',
+              command: './vendor/bin/pint --test --cache-file=var/cache/pint/pint.cache --ansi --format=checkstyle | cs2pr',
+              php: true,
+            }
+          - {
+              name: '🏠 Rector',
+              command: './vendor/bin/rector process --dry-run --no-progress-bar --output-format=github --ansi',
+              php: true,
+            }
+          - {
+              name: '🅿️ Prettier',
+              command: 'yarn prettier',
+              node: true,
+            }
+          - {
+            name: '🔯 Eslint',
+            command: 'yarn eslint',
+            node: true,
+          }
+
+    steps:
+      - name: '🛎 Checkout'
+        uses: actions/checkout@v5
+
+      - name: '⚙️ Prepare environment'
+        uses: ./.github/actions/setup-environment
+        with:
+          use-php: ${{ matrix.command.php }}
+          use-node: ${{ matrix.command.node }}
+
+      - name: ${{ matrix.command.name }}
+        run: ${{ matrix.command.command }}
+        env:
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: testing
+          DB_USERNAME: db
+          DB_PASSWORD: db
+
+  tests:
+    name: '♻️ Tests | ${{ matrix.command.name }}'
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine3.20
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: testing
+          POSTGRES_USER: db
+          POSTGRES_PASSWORD: db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - { name: '🔬 Unit',     command: 'php artisan test --testsuite=Unit --parallel',                                        report: false }
+          - { name: '🧬 Feature',  command: 'php artisan test --testsuite=Feature --parallel',                                     report: false }
+          - { name: '☂️ Coverage', command: 'php artisan test --coverage --compact --coverage-clover coverage/coverage-clover.xml', report: true  }
+          - { name: '🦠 Mutation', command: 'php artisan test --mutate --covered-only --min=100 --parallel',                       report: false }
+
+    steps:
+      - name: '🛎 Checkout'
+        uses: actions/checkout@v5
+
+      - name: '⚙️ Prepare environment'
+        uses: ./.github/actions/setup-environment
+        with:
+          use-node: true
+
+      - name: '🗄️ Grant CREATEDB permission'
+        run: PGPASSWORD=db psql -h 127.0.0.1 -U db -d testing -c "ALTER USER db CREATEDB;"
+
+      - name: '${{ matrix.command.name }} tests'
+        run: ${{ matrix.command.command }}
+        env:
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: testing
+          DB_USERNAME: db
+          DB_PASSWORD: db
+
+      - name: '☂️ Upload results to Codecov'
+        if: ${{ !cancelled() && matrix.command.report }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: OrderFlux/order-flux-webapp
+          flags: ${{ matrix.command.name }}
+          directory: ./coverage
+          files: ./coverage/coverage-clover.xml
+          verbose: true
+          name: codecov-report
+          commit_parent: ${{ github.event.pull_request.base.sha }}
+
+      - name: '☂️ Upload test results to Codecov'
+        if: ${{ !cancelled() && matrix.command.report }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ matrix.command.name }}
+          directory: ./coverage
+          fail_ci_if_error: true
