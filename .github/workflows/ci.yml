@@ -141,7 +141,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: OrderFlux/order-flux-webapp
+          slug: zhyzhkoslava/OrderFlux
           flags: ${{ matrix.command.name }}
           directory: ./coverage
           files: ./coverage/coverage-clover.xml
