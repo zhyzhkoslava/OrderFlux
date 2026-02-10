@@ -1,0 +1,48 @@
+name: Deploy To Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+
+jobs:
+  deploy:
+    name: Deploy ${{ github.event.inputs.environment }} from ${{ github.event.inputs.branch }}
+    runs-on: staging
+    environment:
+      name: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Pull latest changes
+        run: |
+          git fetch
+          git checkout ${{ github.event.inputs.branch }}
+          git pull origin ${{ github.event.inputs.branch }}
+
+      - name: Create .env file
+        run: |
+          cat > .env << 'EOL'
+          ${{ secrets.ENV_FILE }}
+          EOL
+
+      - name: Docker deploy
+        run: |
+          docker compose down --remove-orphans
+          docker compose up -d --build
+          sleep 10
+
+          docker compose exec app php artisan optimize
+
+          docker compose exec app php artisan migrate --force
