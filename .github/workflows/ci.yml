@@ -113,8 +113,7 @@ jobs:
       fail-fast: false
       matrix:
         command:
-          - { name: '🔬 Unit',     command: 'php artisan test --testsuite=Unit --parallel',                                        report: false }
-          - { name: '🧬 Feature',  command: 'php artisan test --testsuite=Feature --parallel',                                     report: false }
+          - { name: '🔬 Unit',     command: 'php artisan test --parallel', report: false }
           - { name: '☂️ Coverage', command: 'php artisan test --coverage --compact --coverage-clover coverage/coverage-clover.xml', report: true  }
 
     steps:
