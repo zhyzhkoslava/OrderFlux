@@ -43,9 +43,6 @@ jobs:
           docker compose up -d --build
           sleep 10
 
-          docker compose exec app yarn install --frozen-lockfile
-          docker compose exec app yarn build
-
           docker compose exec app php artisan optimize
 
           docker compose exec app php artisan migrate --force

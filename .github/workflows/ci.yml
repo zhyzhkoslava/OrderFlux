@@ -81,7 +81,6 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           use-php: ${{ matrix.command.php }}
-          use-node: ${{ matrix.command.node }}
 
       - name: ${{ matrix.command.name }}
         run: ${{ matrix.command.command }}
@@ -126,7 +125,7 @@ jobs:
       - name: '⚙️ Prepare environment'
         uses: ./.github/actions/setup-environment
         with:
-          use-node: true
+          use-php: true
 
       - name: '🗄️ Grant CREATEDB permission'
         run: PGPASSWORD=db psql -h 127.0.0.1 -U db -d testing -c "ALTER USER db CREATEDB;"
