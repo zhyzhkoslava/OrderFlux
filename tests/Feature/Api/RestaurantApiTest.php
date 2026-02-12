@@ -66,4 +66,52 @@ final class RestaurantApiTest extends TestCase
         $this->deleteJson('/api/restaurants/'.$restaurant->public_id)->assertNoContent();
         $this->assertDatabaseMissing('restaurants', ['id' => $restaurant->id]);
     }
+
+    #[Test]
+    public function test_restaurant_store_validation_errors_are_returned(): void
+    {
+        $response = $this->postJson('/api/restaurants', [
+            'name'     => '',
+            'slug'     => '',
+            'timezone' => '',
+            'currency' => 'USDT',
+            'address'  => [
+                'line1'        => '',
+                'city'         => '',
+                'country_code' => 'USA',
+            ],
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors([
+            'name',
+            'slug',
+            'timezone',
+            'currency',
+            'address.line1',
+            'address.city',
+            'address.country_code',
+        ]);
+    }
+
+    #[Test]
+    public function test_restaurant_update_validates_unique_slug_except_current_model(): void
+    {
+        $first = Restaurant::factory()->create(['slug' => 'first-slug']);
+        $second = Restaurant::factory()->create(['slug' => 'second-slug']);
+
+        $this->putJson('/api/restaurants/'.$first->public_id, ['slug' => 'first-slug'])
+            ->assertOk();
+
+        $this->putJson('/api/restaurants/'.$second->public_id, ['slug' => 'first-slug'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['slug']);
+    }
+
+    #[Test]
+    public function test_restaurant_show_returns_not_found_for_unknown_public_id(): void
+    {
+        $this->getJson('/api/restaurants/00000000-0000-0000-0000-000000000000')
+            ->assertNotFound();
+    }
 }

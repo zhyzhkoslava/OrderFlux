@@ -47,4 +47,24 @@ final class CustomerApiTest extends TestCase
         $this->deleteJson('/api/customers/'.$customer->public_id)->assertNoContent();
         $this->assertDatabaseMissing('customers', ['id' => $customer->id]);
     }
+
+    #[Test]
+    public function test_customer_validation_errors_are_returned(): void
+    {
+        $response = $this->postJson('/api/customers', [
+            'email' => 'not-an-email',
+            'phone' => str_repeat('1', 33),
+            'name'  => str_repeat('a', 256),
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors(['email', 'phone', 'name']);
+    }
+
+    #[Test]
+    public function test_customer_show_returns_not_found_for_unknown_public_id(): void
+    {
+        $this->getJson('/api/customers/00000000-0000-0000-0000-000000000000')
+            ->assertNotFound();
+    }
 }
