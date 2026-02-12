@@ -4,24 +4,38 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\OrderItemModifier;
+use App\Models\Restaurant;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        if (! app()->environment(['local', 'testing'])) {
+            return;
+        }
 
-        User::factory()->create([
-            'name'  => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $restaurant = Restaurant::factory()->create();
+        $customers = Customer::factory()->count(2)->create();
+
+        foreach ($customers as $customer) {
+            $order = Order::factory()
+                ->for($restaurant)
+                ->for($customer)
+                ->create();
+
+            $items = OrderItem::factory()->count(2)->for($order)->create();
+
+            foreach ($items as $item) {
+                OrderItemModifier::factory()->count(2)->for($item)->create();
+            }
+        }
     }
 }
