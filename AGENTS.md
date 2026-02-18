@@ -14,7 +14,6 @@ This file defines how coding agents should work in this repository to maximize d
 
 ## Standard Commands
 - Install PHP deps: `docker compose exec -T app composer install`
-- Install JS deps: `docker compose exec -T app npm install`
 - Run tests (parallel): `docker compose exec -T app php artisan test --parallel`
 - Run single test file: `docker compose exec -T app php artisan test --compact tests/Feature/Api/OrderApiTest.php`
 - Run PHPStan: `docker compose exec -T app ./vendor/bin/phpstan analyse --no-progress --memory-limit=2G`
