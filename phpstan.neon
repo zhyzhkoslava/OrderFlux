@@ -12,16 +12,5 @@ parameters:
     function: 8
   checkOctaneCompatibility: true
   tmpDir: ./var/cache/phpstan
-  excludePaths:
-      - database/migrations/*
   ignoreErrors:
-    - identifier: missingType.generics
-      paths:
-        - app/Models/BaseModel.php
-        - app/Models/User.php
-        - app/Models/Restaurant.php
-        - app/Models/Customer.php
-        - app/Models/DeliveryAddress.php
-        - app/Models/Order.php
-        - app/Models/OrderItem.php
-        - app/Models/OrderItemModifier.php
+    - '#Trait App\\Models\\Concerns\\HasPublicId is used zero times and is not analysed\.#'

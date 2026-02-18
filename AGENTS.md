@@ -142,8 +142,6 @@ docker compose exec -T app php artisan test --coverage
 - Eloquent Relationships: Use `withTrashed()` method for eager loading trashed models
 
 ### Architecture Patterns
-- Laravel Actions: If used in this repository, business logic is organized in Action classes (`lorisleiva/laravel-actions`)
-- Inertia.js: If used in this repository, frontend is built with Vue.js via Inertia.js
 - Domain Organization: Features organized by domain (Auth, MentorPrograms, etc.)
 - Repository Pattern: Not explicitly used, relies on Eloquent models
 - Service Layer: Implemented via Action classes

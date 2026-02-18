@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# Commit message hook disabled (commitlint removed).
-exit 0
