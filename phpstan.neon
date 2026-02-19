@@ -12,10 +12,3 @@ parameters:
     function: 8
   checkOctaneCompatibility: true
   tmpDir: ./var/cache/phpstan
-  excludePaths:
-      - database/migrations/*
-  ignoreErrors:
-    - identifier: missingType.generics
-      paths:
-        - app/Models/BaseModel.php
-        - app/Models/User.php

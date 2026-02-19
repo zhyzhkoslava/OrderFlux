@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Setup script for Git hooks
 # Run this script after cloning the repository to enable shared Git hooks
@@ -14,5 +14,5 @@ chmod +x .githooks/*
 echo "✅ Git hooks have been configured successfully!"
 echo "The following hooks are now active:"
 echo "  - pre-commit: Runs Rector and Pint code fixes"
-echo "  - commit-msg: Validates commit messages with commitlint"
+echo "  - commit-msg: Disabled (no commit message linting)"
 echo "  - pre-push: Validates branch names"

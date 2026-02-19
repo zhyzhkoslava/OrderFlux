@@ -7,8 +7,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ */
 abstract class BaseModel extends Model
 {
+    /** @use HasFactory<TFactory> */
     use HasFactory;
 
     /**

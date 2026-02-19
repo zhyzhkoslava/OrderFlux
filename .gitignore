@@ -36,6 +36,7 @@ package-lock.json
 docker/nginx/certs/
 coverage/
 var/
+pgsql.session.sql
 # Log files
 *.log
 

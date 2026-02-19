@@ -16,21 +16,28 @@
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <directory>app/Providers</directory>
+            <directory>app/Models</directory>
+        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:ZkJjv6x6Q2hWk7rC0Yy9M7j9vCkHn8rX7sQ0sQwQ9p8="/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
-        <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
+        <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
-        <env name="PULSE_ENABLED" value="false"/>
-        <env name="TELESCOPE_ENABLED" value="false"/>
-        <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="TELESCOPE_ENABLED" value="true"/>
+        <env name="LOG_CHANNEL" value="stderr"/>
+        <ini name="memory_limit" value="512M"/>
     </php>
+     <coverage>
+        <report>
+            <html outputDirectory="coverage"/>
+            <clover outputFile="coverage/coverage-clover.xml"/>
+        </report>
+     </coverage>
 </phpunit>
