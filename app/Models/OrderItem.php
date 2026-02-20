@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,10 +22,8 @@ final class OrderItem extends BaseModel
         'public_id',
         'order_id',
         'sku',
-        'snapshot_name',
         'qty',
         'price_cents',
-        'line_total_cents',
         'currency',
     ];
 
@@ -52,10 +51,9 @@ final class OrderItem extends BaseModel
     {
         return [
             ...parent::casts(),
-            'qty'              => 'integer',
-            'price_cents'      => 'integer',
-            'line_total_cents' => 'integer',
-            'currency'         => 'string',
+            'qty'         => 'integer',
+            'price_cents' => 'integer',
+            'currency'    => Currency::class,
         ];
     }
 }

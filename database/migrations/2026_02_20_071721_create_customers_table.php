@@ -13,11 +13,11 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table): void {
             $table->id();
             $table->string('public_id')->unique();
-            $table->foreignId('restaurant_id')->constrained('restaurants')->restrictOnDelete();
+            $table->foreignId('restaurant_id')->constrained('restaurants')->cascadeOnDelete();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone');
-            $table->timestampsTz();
+            $table->timestamps();
 
             $table->index(['restaurant_id', 'phone']);
         });

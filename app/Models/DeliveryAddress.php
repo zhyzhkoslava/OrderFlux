@@ -18,7 +18,6 @@ final class DeliveryAddress extends BaseModel
      */
     protected $fillable = [
         'public_id',
-        'restaurant_id',
         'customer_id',
         'city',
         'street',
@@ -26,14 +25,6 @@ final class DeliveryAddress extends BaseModel
         'apartment',
         'comment',
     ];
-
-    /**
-     * @return BelongsTo<Restaurant, $this>
-     */
-    public function restaurant(): BelongsTo
-    {
-        return $this->belongsTo(Restaurant::class);
-    }
 
     /**
      * @return BelongsTo<Customer, $this>

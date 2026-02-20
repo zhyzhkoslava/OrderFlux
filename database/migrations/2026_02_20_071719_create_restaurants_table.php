@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('timezone');
             $table->char('currency', 3);
             $table->boolean('is_active')->default(true);
-            $table->timestampsTz();
+            $table->timestamps();
         });
     }
 

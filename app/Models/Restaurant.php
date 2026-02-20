@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @extends BaseModel<Factory>
@@ -34,18 +36,23 @@ final class Restaurant extends BaseModel
     }
 
     /**
-     * @return HasMany<DeliveryAddress, $this>
-     */
-    public function deliveryAddresses(): HasMany
-    {
-        return $this->hasMany(DeliveryAddress::class);
-    }
-
-    /**
      * @return HasMany<Order, $this>
      */
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            ...parent::casts(),
+            'currency'  => Currency::class,
+            'is_active' => 'boolean',
+        ];
     }
 }

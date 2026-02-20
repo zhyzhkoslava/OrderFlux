@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Currency;
+use App\Enums\OrderStatus;
+use App\Enums\OrderType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -71,9 +74,11 @@ final class Order extends BaseModel
         return [
             ...parent::casts(),
             'scheduled_at'       => 'immutable_datetime',
+            'type'               => OrderType::class,
+            'status'             => OrderStatus::class,
             'total_cents'        => 'integer',
             'delivery_fee_cents' => 'integer',
-            'currency'           => 'string',
+            'currency'           => Currency::class,
         ];
     }
 }

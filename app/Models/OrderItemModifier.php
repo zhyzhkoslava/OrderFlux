@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Currency;
+use App\Enums\OrderItemModifierType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -19,11 +21,9 @@ final class OrderItemModifier extends BaseModel
     protected $fillable = [
         'public_id',
         'order_item_id',
-        'snapshot_name',
         'type',
         'quantity',
         'price_cents',
-        'line_total_cents',
         'currency',
     ];
 
@@ -43,10 +43,10 @@ final class OrderItemModifier extends BaseModel
     {
         return [
             ...parent::casts(),
-            'quantity'         => 'integer',
-            'price_cents'      => 'integer',
-            'line_total_cents' => 'integer',
-            'currency'         => 'string',
+            'type'        => OrderItemModifierType::class,
+            'quantity'    => 'integer',
+            'price_cents' => 'integer',
+            'currency'    => Currency::class,
         ];
     }
 }

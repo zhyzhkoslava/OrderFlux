@@ -13,16 +13,16 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table): void {
             $table->id();
             $table->string('public_id')->unique();
-            $table->foreignId('restaurant_id')->constrained('restaurants')->restrictOnDelete();
+            $table->foreignId('restaurant_id')->constrained('restaurants')->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->restrictOnDelete();
             $table->foreignId('delivery_address_id')->nullable()->constrained('delivery_addresses')->nullOnDelete();
-            $table->timestampTz('scheduled_at');
-            $table->enum('type', ['ASAP', 'PREORDER']);
+            $table->timestamp('scheduled_at');
+            $table->string('type');
             $table->string('status');
             $table->integer('total_cents');
             $table->integer('delivery_fee_cents')->default(0);
             $table->char('currency', 3);
-            $table->timestampsTz();
+            $table->timestamps();
 
             $table->index(['restaurant_id', 'status']);
             $table->index(['restaurant_id', 'scheduled_at']);

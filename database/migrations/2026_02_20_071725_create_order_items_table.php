@@ -15,12 +15,10 @@ return new class extends Migration
             $table->string('public_id')->unique();
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->string('sku');
-            $table->string('snapshot_name');
             $table->unsignedInteger('qty');
             $table->integer('price_cents');
-            $table->integer('line_total_cents');
             $table->char('currency', 3);
-            $table->timestampsTz();
+            $table->timestamps();
 
             $table->index(['order_id', 'sku']);
         });

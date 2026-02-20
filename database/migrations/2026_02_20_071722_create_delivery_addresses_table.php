@@ -13,14 +13,13 @@ return new class extends Migration
         Schema::create('delivery_addresses', function (Blueprint $table): void {
             $table->id();
             $table->string('public_id')->unique();
-            $table->foreignId('restaurant_id')->constrained('restaurants')->restrictOnDelete();
-            $table->foreignId('customer_id')->nullable()->constrained('customers')->nullOnDelete();
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->cascadeOnDelete();
             $table->string('city');
             $table->string('street');
             $table->string('building');
             $table->string('apartment')->nullable();
             $table->string('comment')->nullable();
-            $table->timestampsTz();
+            $table->timestamps();
         });
     }
 

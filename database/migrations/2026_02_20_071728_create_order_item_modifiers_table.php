@@ -14,13 +14,11 @@ return new class extends Migration
             $table->id();
             $table->string('public_id')->unique();
             $table->foreignId('order_item_id')->constrained('order_items')->cascadeOnDelete();
-            $table->string('snapshot_name');
-            $table->enum('type', ['add', 'remove']);
+            $table->string('type');
             $table->unsignedInteger('quantity')->default(1);
             $table->integer('price_cents')->default(0);
-            $table->integer('line_total_cents')->default(0);
             $table->char('currency', 3);
-            $table->timestampsTz();
+            $table->timestamps();
         });
     }
 
