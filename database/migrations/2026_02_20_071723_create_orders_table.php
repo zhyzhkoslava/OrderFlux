@@ -14,8 +14,8 @@ return new class extends Migration
             $table->id();
             $table->string('public_id')->unique();
             $table->foreignId('restaurant_id')->constrained('restaurants')->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers')->restrictOnDelete();
-            $table->foreignId('delivery_address_id')->nullable()->constrained('delivery_addresses')->nullOnDelete();
+            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
+            $table->foreignId('delivery_address_id')->nullable()->constrained('delivery_addresses')->cascadeOnDelete();
             $table->timestamp('scheduled_at');
             $table->string('type');
             $table->string('status');
