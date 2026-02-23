@@ -75,6 +75,32 @@ return [
             'after_commit' => false,
         ],
 
+        'rabbitmq' => [
+            'driver'     => 'rabbitmq',
+            'queue'      => env('RABBITMQ_QUEUE', 'orders.ingestion'),
+            'connection' => PhpAmqpLib\Connection\AMQPLazyConnection::class,
+            'hosts'      => [
+                [
+                    'host'     => env('RABBITMQ_HOST', 'rabbitmq'),
+                    'port'     => (int) env('RABBITMQ_PORT', 5672),
+                    'user'     => env('RABBITMQ_USER', env('RABBITMQ_DEFAULT_USER', 'guest')),
+                    'password' => env('RABBITMQ_PASSWORD', env('RABBITMQ_DEFAULT_PASS', 'guest')),
+                    'vhost'    => env('RABBITMQ_VHOST', '/'),
+                ],
+            ],
+            'options' => [
+                'queue' => [
+                    'exchange'             => env('RABBITMQ_EXCHANGE', 'orders.events'),
+                    'exchange_type'        => env('RABBITMQ_EXCHANGE_TYPE', 'topic'),
+                    'exchange_routing_key' => env('RABBITMQ_ROUTING_KEY', 'orders.ingestion'),
+                    'durable'              => true,
+                ],
+            ],
+            'worker'         => env('RABBITMQ_WORKER', 'default'),
+            'sleep_on_error' => env('RABBITMQ_ERROR_SLEEP', 5),
+            'after_commit'   => true,
+        ],
+
         'deferred' => [
             'driver' => 'deferred',
         ],
