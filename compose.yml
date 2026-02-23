@@ -81,10 +81,6 @@ services:
       COMMAND: php artisan queue:work rabbitmq --queue=orders.ingestion
       PROCESS: worker
     ports: []
-    networks:
-      - db-network
-      - redis-network
-      - rabbitmq-network
 
   schedule:
     <<: *app
@@ -92,10 +88,6 @@ services:
     environment:
       COMMAND: supercronic -quiet /var/www/docker/php/schedule/schedule
       PROCESS: schedule
-    networks:
-      - db-network
-      - redis-network
-      - rabbitmq-network
     ports: []
     healthcheck:
       test: supercronic -test /var/www/docker/php/schedule/schedule | grep -q 'is valid' # TODO try spatie LARAVEL-HEALTH
@@ -113,10 +105,6 @@ services:
       PROCESS: reverb
     ports:
       - '8080:8080'
-    networks:
-      - db-network
-      - redis-network
-      - rabbitmq-network
 
   redis:
     image: redis:7.2.4-alpine
