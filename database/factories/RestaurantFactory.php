@@ -26,6 +26,8 @@ final class RestaurantFactory extends Factory
             'slug'      => fake()->unique()->slug(),
             'address'   => fake()->streetAddress(),
             'timezone'  => fake()->timezone(),
+            'opens_at'  => '09:00:00',
+            'closes_at' => '22:00:00',
             'currency'  => fake()->randomElement(Currency::cases()),
             'is_active' => true,
         ];

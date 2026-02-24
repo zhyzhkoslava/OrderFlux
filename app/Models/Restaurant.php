@@ -23,6 +23,8 @@ final class Restaurant extends BaseModel
         'slug',
         'address',
         'timezone',
+        'opens_at',
+        'closes_at',
         'currency',
         'is_active',
     ];
