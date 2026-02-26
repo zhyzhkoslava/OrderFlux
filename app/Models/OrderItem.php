@@ -22,7 +22,7 @@ final class OrderItem extends BaseModel
         'public_id',
         'order_id',
         'sku',
-        'qty',
+        'quantity',
         'price_cents',
         'currency',
     ];
@@ -51,7 +51,7 @@ final class OrderItem extends BaseModel
     {
         return [
             ...parent::casts(),
-            'qty'         => 'integer',
+            'quantity'    => 'integer',
             'price_cents' => 'integer',
             'currency'    => Currency::class,
         ];

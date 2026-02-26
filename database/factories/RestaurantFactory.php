@@ -28,7 +28,7 @@ final class RestaurantFactory extends Factory
             'timezone'  => fake()->timezone(),
             'opens_at'  => '09:00:00',
             'closes_at' => '22:00:00',
-            'currency'  => fake()->randomElement(Currency::cases()),
+            'currency'  => fake()->randomElement(Currency::cases())->value,
             'is_active' => true,
         ];
     }

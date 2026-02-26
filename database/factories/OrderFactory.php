@@ -25,16 +25,16 @@ final class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'public_id'           => (string) fake()->uuid(),
-            'restaurant_id'       => Restaurant::factory(),
-            'customer_id'         => Customer::factory(),
-            'delivery_address_id' => null,
-            'scheduled_at'        => fake()->dateTimeBetween('now', '+2 days'),
-            'type'                => fake()->randomElement(OrderType::cases()),
-            'status'              => fake()->randomElement(OrderStatus::cases()),
-            'total_cents'         => fake()->numberBetween(500, 50000),
-            'delivery_fee_cents'  => fake()->numberBetween(0, 10000),
-            'currency'            => fake()->randomElement(Currency::cases()),
+            'public_id'             => (string) fake()->uuid(),
+            'restaurant_id'         => Restaurant::factory(),
+            'customer_id'           => Customer::factory(),
+            'delivery_address_id'   => null,
+            'request_delivery_time' => fake()->dateTimeBetween('now', '+2 days'),
+            'type'                  => fake()->randomElement(OrderType::cases())->value,
+            'status'                => fake()->randomElement(OrderStatus::cases())->value,
+            'total_cents'           => fake()->numberBetween(500, 50000),
+            'delivery_fee_cents'    => fake()->numberBetween(0, 10000),
+            'currency'              => fake()->randomElement(Currency::cases())->value,
         ];
     }
 }
