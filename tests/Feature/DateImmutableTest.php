@@ -29,7 +29,7 @@ final class DateImmutableTest extends TestCase
 
         self::assertSame(
             $date->format('Y-m-d H:i:s'),
-            $newDate->subDay()->format('Y-m-d H:i:s')
+            $newDate->subDay()->format('Y-m-d H:i:s'),
         );
     }
 }

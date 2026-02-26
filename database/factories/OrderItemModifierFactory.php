@@ -25,10 +25,10 @@ final class OrderItemModifierFactory extends Factory
         return [
             'public_id'     => (string) fake()->uuid(),
             'order_item_id' => OrderItem::factory(),
-            'type'          => fake()->randomElement(OrderItemModifierType::cases()),
+            'type'          => fake()->randomElement(OrderItemModifierType::cases())->value,
             'quantity'      => fake()->numberBetween(1, 3),
             'price_cents'   => fake()->numberBetween(0, 3000),
-            'currency'      => fake()->randomElement(Currency::cases()),
+            'currency'      => fake()->randomElement(Currency::cases())->value,
         ];
     }
 }

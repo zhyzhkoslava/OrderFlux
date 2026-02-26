@@ -25,7 +25,7 @@ final class Order extends BaseModel
         'restaurant_id',
         'customer_id',
         'delivery_address_id',
-        'scheduled_at',
+        'request_delivery_time',
         'type',
         'status',
         'total_cents',
@@ -73,12 +73,12 @@ final class Order extends BaseModel
     {
         return [
             ...parent::casts(),
-            'scheduled_at'       => 'immutable_datetime',
-            'type'               => OrderType::class,
-            'status'             => OrderStatus::class,
-            'total_cents'        => 'integer',
-            'delivery_fee_cents' => 'integer',
-            'currency'           => Currency::class,
+            'request_delivery_time' => 'immutable_datetime',
+            'type'                  => OrderType::class,
+            'status'                => OrderStatus::class,
+            'total_cents'           => 'integer',
+            'delivery_fee_cents'    => 'integer',
+            'currency'              => Currency::class,
         ];
     }
 }

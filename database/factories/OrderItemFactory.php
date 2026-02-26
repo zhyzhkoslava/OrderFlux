@@ -25,9 +25,9 @@ final class OrderItemFactory extends Factory
             'public_id'   => (string) fake()->uuid(),
             'order_id'    => Order::factory(),
             'sku'         => fake()->bothify('sku_####_??'),
-            'qty'         => fake()->numberBetween(1, 5),
+            'quantity'    => fake()->numberBetween(1, 5),
             'price_cents' => fake()->numberBetween(100, 10000),
-            'currency'    => fake()->randomElement(Currency::cases()),
+            'currency'    => fake()->randomElement(Currency::cases())->value,
         ];
     }
 }
